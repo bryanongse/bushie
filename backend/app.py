@@ -3,35 +3,51 @@ from flask import Flask, jsonify, request
 import datetime
 import base64
 
+from flask.helpers import send_file
+
 host = '192.168.1.21'
 app = Flask(__name__)
 
 
 @app.route('/photo', methods=['POST', 'GET'])
 def get_photo():
-    message = "no image"
-    print(str(request.method))
+    message = "image not uploaded"
     if request.method == "POST":
-
         response = request.get_data()
         n = len(response)
         print(n)
         padding = '=' * (4 - n % 4)
-        newresponse = response + bytes(padding, 'utf-8')
-        '''
-        with open('new.txt', 'wb') as test:
-            test.write(newresponse)
-        print(len(newresponse))
-        '''
+        newresponse = response[22:n] + bytes(padding, 'utf-8')
 
         imgdata = base64.b64decode(newresponse)
-        with open("test1.png", "wb") as fh:
+        with open("test1.jpg", "wb") as fh:
             fh.write(imgdata)
             message = "image uploaded"
-
-        print("end of post")
-
     return jsonify(message)
+
+
+@app.route('/processedphoto', methods=['GET'])
+def processed_photo():
+    if request.method == "GET":
+        # --------------assuming inputs ML model---------
+        # from <ml file> import * (?)
+        # ML model accesses the og photo test1.jpg
+        # ML model returns a processed photo, stores under the variable <filename>
+        # ----------------------------------------------
+        filename = 'flower.jpg'
+    # return jsonify(results)
+    return send_file(filename, mimetype='image/jpg')
+
+
+@app.route('/results', methods=['GET'])
+def get_results():
+    # --------------assuming inputs ---------
+    # from <file> import * (?)
+    #
+    # ----------------------------------------------
+    results = {"wall_area": 1, "no_of_plants": 1,
+               "temp_change": 1, "energy_saving": 1, "cost_saving": 1}
+    return jsonify(results)
 
 
 if __name__ == "__main__":
