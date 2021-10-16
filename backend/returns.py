@@ -10,7 +10,7 @@ def returns(loc1 = (1.3539504607263098, 103.68779725423865),loc2 =(1.35394612352
     overlay(imgPath, "imgOverlay2.jpg", bitmapPath)
 
     bitmapImg = cv2.imread(bitmapPath)
-    area, maxwActl, heightActl = areas(bitmapImg, math.dist(loc1,loc2))
+    area, maxwActl, heightActl = areas(bitmapImg, 111111*math.dist(loc1,loc2)) # approx estimation as lat and lng are near the equator for 111,111
     BaseTemp, NewTemp, monthEnergy = conversion(loc1, loc2, maxwActl, heightActl)
 
     return BaseTemp, NewTemp, area, monthEnergy
