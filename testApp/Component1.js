@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, ImageBackground } from "react-native";
+import { Camera } from 'expo-camera';
 
 export default function Component1() {
   return (
@@ -7,6 +8,7 @@ export default function Component1() {
       <ImageBackground
         style={styles.logo}
         source={require("./assets/verticalgarden.jpg")}
+        resizeMode="cover"
       >
         <Text style={styles.text}>Hi</Text>
       </ImageBackground>
