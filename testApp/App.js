@@ -33,7 +33,7 @@ export default function App() {
   const [yCoord, setYCoord] = useState("");
 
   function Sendphoto() {
-    fetch("http://192.168.1.21:3000/photo", {
+    fetch("http://192.168.1.166:8080/photo", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -46,9 +46,10 @@ export default function App() {
   }
   const takePicture = async () => {
     if (camera) {
-      const data = await camera.takePictureAsync(null);
-      console.log(data.uri);
-      setImage(data.uri);
+      const options = { quality: 0.5, base64: true };
+      const data = await camera.takePictureAsync(options);
+      console.log(data);
+      setImage(data.base64);
       setShowModal(false);
     }
   };

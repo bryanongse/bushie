@@ -5,7 +5,7 @@ import base64
 
 from flask.helpers import send_file
 
-host = '192.168.1.21'
+host = '192.168.1.166'
 app = Flask(__name__)
 
 
@@ -14,12 +14,7 @@ def get_photo():
     message = "image not uploaded"
     if request.method == "POST":
         response = request.get_data()
-        n = len(response)
-        print(n)
-        padding = '=' * (4 - n % 4)
-        newresponse = response[22:n] + bytes(padding, 'utf-8')
-
-        imgdata = base64.b64decode(newresponse)
+        imgdata = base64.b64decode(response)
         with open("test1.jpg", "wb") as fh:
             fh.write(imgdata)
             message = "image uploaded"
@@ -51,4 +46,4 @@ def get_results():
 
 
 if __name__ == "__main__":
-    app.run(host=host, port=3000, debug=True)
+    app.run(host=host, port=8080, debug=True)

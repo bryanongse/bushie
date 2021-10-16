@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, FlatList} from 'react-native';
 
 function Sendphoto(props) {
     const sendPicture = () => {
-        fetch('http://192.168.1.21:3000/photo',{
+        fetch('http://192.168.1.166:8080/photo',{
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
