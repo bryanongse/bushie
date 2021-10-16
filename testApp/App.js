@@ -9,22 +9,33 @@ import {
   View,
   TouchableOpacity,
   ImageBackground,
+  Button,
 } from "react-native";
 import { Camera } from "expo-camera";
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const [camera, setCamera] = useState(null);
+  const [image, setImage] = useState(null);
+  const [showCamera, setShowCamera] = useState(true);
 
-  const cam = useRef().current;
+  // const cam = useRef().current;
 
-  const _takepicture = async () => {
-    const option = { quality: 0.5, base64: true, skipProcessing: false };
+  // const _takepicture = async () => {
+  //   const option = { quality: 0.5, base64: true, skipProcessing: false };
 
-    const picture = cam.takePictureAsync(option);
+  //   const picture = cam.takePictureAsync(option);
 
-    if (picture.source) {
-      console.log(picture.source);
+  //   if (picture.source) {
+  //     console.log(picture.source);
+  //   }
+  // };
+  const takePicture = async () => {
+    if (camera) {
+      const data = await camera.takePictureAsync(null);
+      console.log(data.uri);
+      setImage(data.uri);
     }
   };
 
@@ -43,36 +54,48 @@ export default function App() {
   }
   return (
     <View style={styles.container}>
-      <ImageBackground
-        style={styles.logo}
-        source={require("./assets/verticalgarden.jpg")}
-        resizeMode="cover"
-      >
-        <Camera style={styles.camera} type={type}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                setType(
-                  type === Camera.Constants.Type.back
-                    ? Camera.Constants.Type.front
-                    : Camera.Constants.Type.back
-                );
-              }}
-            >
-              <Icon name="shuffle" size={50} color="white" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.photoBtn}
-              onPress={() => _takepicture}
-            >
-              <Icon name="camera" size={50} color="white" />
-            </TouchableOpacity>
-          </View>
-        </Camera>
-      </ImageBackground>
+      {showCamera ? (
+        <ImageBackground
+          style={styles.logo}
+          source={{ uri: image }}
+          resizeMode="cover"
+        >
+          <Camera
+            style={styles.camera}
+            type={type}
+            ref={(ref) => setCamera(ref)}
+          >
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  setType(
+                    type === Camera.Constants.Type.back
+                      ? Camera.Constants.Type.front
+                      : Camera.Constants.Type.back
+                  );
+                }}
+              >
+                <Icon name="shuffle" size={50} color="white" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.photoBtn}
+                onPress={() => takePicture()}
+              >
+                <Icon name="camera" size={50} color="white" />
+              </TouchableOpacity>
+            </View>
+          </Camera>
+        </ImageBackground>
+      ) : (
+        <Component2 />
+      )}
+      <Button
+        title={showCamera ? "Swap" : "Back"}
+        onPress={() => setShowCamera((prev) => !prev)}
+      />
     </View>
   );
 }
