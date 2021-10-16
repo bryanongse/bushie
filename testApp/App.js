@@ -1,10 +1,16 @@
 import { StatusBar } from "expo-status-bar";
 import Component1 from "./Component1";
 import Component2 from "./Component2";
-import Sendphoto from "./Sendphoto";
 import React, { useState, useEffect, useRef } from "react";
 import { Feather as Icon } from "@expo/vector-icons";
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Button} from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ImageBackground,
+  Button,
+} from "react-native";
 import { Camera } from "expo-camera";
 
 export default function App() {
@@ -19,12 +25,25 @@ export default function App() {
   // const _takepicture = async () => {
   //   const option = { quality: 0.5, base64: true, skipProcessing: false };
 
-  //   const picture = cam.takePictureAsyn  c(option);
+  //   const picture = cam.takePictureAsync(option);
 
   //   if (picture.source) {
   //     console.log(picture.source);
   //   }
   // };
+
+  function Sendphoto() {
+    fetch("http://192.168.1.21:3000/photo", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+      body: image,
+    })
+      .then((resp) => resp.json())
+      .catch((error) => console.log(error));
+  }
   const takePicture = async () => {
     if (camera) {
       const data = await camera.takePictureAsync(null);
@@ -86,9 +105,10 @@ export default function App() {
       ) : (
         <Component2 image={image} />
       )}
+      <Button title="Send Photo" onPress={() => Sendphoto()}/>
       <Button
         title={showCamera ? "Submit" : "Back"}
-        onPress={() => {Sendphoto(image); setShowCamera((prev) => !prev);}}
+        onPress={() => setShowCamera((prev) => !prev)}
       />
     </View>
   );
