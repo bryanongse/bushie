@@ -24,6 +24,7 @@ export default function App() {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
+  const [imageBase64, setImageBase64] = useState(null);
   const [showCamera, setShowCamera] = useState(true);
   const [showModal, setShowModal] = useState(true);
   const [location, setLocation] = useState(null);
@@ -39,7 +40,7 @@ export default function App() {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
       },
-      body: image,
+      body: imageBase64,
     })
       .then((resp) => resp.json())
       .catch((error) => console.log(error));
@@ -49,7 +50,8 @@ export default function App() {
       const options = { quality: 0.5, base64: true };
       const data = await camera.takePictureAsync(options);
       console.log(data);
-      setImage(data.base64);
+      setImage(data.uri);
+      setImageBase64(data.base64);
       setShowModal(false);
     }
   };
