@@ -1,16 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import Component1 from "./Component1";
 import Component2 from "./Component2";
+import Sendphoto from "./Sendphoto";
 import React, { useState, useEffect, useRef } from "react";
 import { Feather as Icon } from "@expo/vector-icons";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ImageBackground,
-  Button,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Button} from "react-native";
 import { Camera } from "expo-camera";
 
 export default function App() {
@@ -25,7 +19,7 @@ export default function App() {
   // const _takepicture = async () => {
   //   const option = { quality: 0.5, base64: true, skipProcessing: false };
 
-  //   const picture = cam.takePictureAsync(option);
+  //   const picture = cam.takePictureAsyn  c(option);
 
   //   if (picture.source) {
   //     console.log(picture.source);
@@ -94,7 +88,7 @@ export default function App() {
       )}
       <Button
         title={showCamera ? "Submit" : "Back"}
-        onPress={() => setShowCamera((prev) => !prev)}
+        onPress={() => {Sendphoto(image); setShowCamera((prev) => !prev);}}
       />
     </View>
   );
