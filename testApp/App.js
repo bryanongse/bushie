@@ -57,7 +57,7 @@ export default function App() {
       {showCamera ? (
         <ImageBackground
           style={styles.logo}
-          source={{ uri: image }}
+          source={require("./assets/verticalgarden.jpg")}
           resizeMode="cover"
         >
           <Camera
@@ -90,10 +90,10 @@ export default function App() {
           </Camera>
         </ImageBackground>
       ) : (
-        <Component2 />
+        <Component2 image={image} />
       )}
       <Button
-        title={showCamera ? "Swap" : "Back"}
+        title={showCamera ? "Submit" : "Back"}
         onPress={() => setShowCamera((prev) => !prev)}
       />
     </View>
