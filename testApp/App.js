@@ -1,5 +1,4 @@
 import { StatusBar } from "expo-status-bar";
-import Component1 from "./Component1";
 import Component2 from "./Component2";
 import React, { useState, useEffect, useRef } from "react";
 import { Feather as Icon } from "@expo/vector-icons";
@@ -11,6 +10,8 @@ import {
   TouchableOpacity,
   ImageBackground,
   Button,
+  ScrollView,
+  Image,
 } from "react-native";
 import { Camera } from "expo-camera";
 
@@ -21,6 +22,7 @@ export default function App() {
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
   const [showCamera, setShowCamera] = useState(true);
+  const [showModal, setShowModal] = useState(true);
 
   // const cam = useRef().current;
 
@@ -51,6 +53,7 @@ export default function App() {
       const data = await camera.takePictureAsync(null);
       console.log(data.uri);
       setImage(data.uri);
+      setShowModal(false);
     }
   };
 
@@ -58,7 +61,7 @@ export default function App() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       quality: 1,
     });
 
@@ -90,48 +93,61 @@ export default function App() {
     <View style={styles.container}>
       {showCamera ? (
         <ImageBackground
-          style={styles.logo}
-          source={require("./assets/verticalgarden.jpg")}
+          style={styles.bg}
+          source={
+            image ? { uri: image } : require("./assets/verticalgarden.jpg")
+          }
           resizeMode="cover"
         >
-          <Camera
-            style={styles.camera}
-            type={type}
-            ref={(ref) => setCamera(ref)}
-          >
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  setType(
-                    type === Camera.Constants.Type.back
-                      ? Camera.Constants.Type.front
-                      : Camera.Constants.Type.back
-                  );
-                }}
-              >
-                <Icon name="shuffle" size={50} color="white" />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.photoBtn}
-                onPress={() => takePicture()}
-              >
-                <Icon name="camera" size={50} color="white" />
-              </TouchableOpacity>
-            </View>
-          </Camera>
+          {showModal ? (
+            <Camera
+              style={styles.camera}
+              type={type}
+              ref={(ref) => setCamera(ref)}
+            >
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    setType(
+                      type === Camera.Constants.Type.back
+                        ? Camera.Constants.Type.front
+                        : Camera.Constants.Type.back
+                    );
+                  }}
+                >
+                  <Icon name="shuffle" size={50} color="white" />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.photoBtn}
+                  onPress={() => takePicture()}
+                >
+                  <Icon name="camera" size={50} color="white" />
+                </TouchableOpacity>
+              </View>
+            </Camera>
+          ) : (
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={() => setShowModal(true)}
+            >
+              <Icon name="chevrons-left" size={50} color="white" />
+            </TouchableOpacity>
+          )}
+          {/* empty view to see photo */}
         </ImageBackground>
       ) : (
         <Component2 image={image} />
       )}
+
       <Button title="Send" onPress={() => Sendphoto()} />
       <Button
         title={showCamera ? "Submit" : "Back"}
         onPress={() => setShowCamera((prev) => !prev)}
       />
-      <Button title="Pick Image" onPress={() => pickImage()}/>
+      <Button title="Pick Image" onPress={() => pickImage()} />
     </View>
   );
 }
@@ -167,10 +183,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: "white",
   },
-  logo: {
+  bg: {
     height: "100%",
     width: "100%",
     flex: 1,
     justifyContent: "center",
+  },
+  backBtn: {
+    flex: 0.2,
+    alignSelf: "flex-end",
+    marginTop: -5,
+    position: "absolute",
   },
 });
