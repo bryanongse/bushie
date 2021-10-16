@@ -1,7 +1,38 @@
-import React, {useState, useEffect} from "react";
-import { Image, StyleSheet, Text, View, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Feather as Icon } from "@expo/vector-icons";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 
 export default function Component2(props) {
+  const [data, setData] = useState([]);
+  function Receivephotos() {
+    fetch("http://192.168.1.21:3000/processedphoto", {
+      method: "GET",
+    })
+      .then((resp) => resp.json())
+      .then((processedphoto) => {
+        setData(processedphoto);
+      })
+      .catch((error) => console.log(error));
+  }
+
+  function Receiveresults() {
+    fetch("http://192.168.1.21:3000/results", {
+      method: "GET",
+    })
+      .then((resp) => resp.json())
+      .then((results) => {
+        setData(results);
+      })
+      .catch((error) => console.log(error));
+  }
+
   function Card(props) {
     return (
       <View style={styles.textBox}>
@@ -12,7 +43,10 @@ export default function Component2(props) {
 
   return (
     <ScrollView style={styles.mainContainer}>
-      <Image source={{ uri: props.image }} style={styles.logo} />
+      <Image source={{ data }} style={styles.logo} />
+      <TouchableOpacity style={styles.backBtn} onPress={() => Receivephotos()}>
+        <Icon name="chevrons-left" size={50} color="white" />
+      </TouchableOpacity>
       <Card text={"Area of Wall"} />
       <Card text={"No of plants"} />
       <Card text={"Change in Temperature"} />
@@ -53,5 +87,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 18,
     color: "#65a765",
+  },
+  backBtn: {
+    flex: 0.2,
+    alignItems: "center",
   },
 });
