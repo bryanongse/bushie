@@ -2,6 +2,28 @@ import React, {useState, useEffect} from "react";
 import { Image, StyleSheet, Text, View, ScrollView } from "react-native";
 
 export default function Component2(props) {
+  function Receivephotos(props){
+    fetch("http://192.168.1.21:3000/processedphoto", {
+      method: "GET"
+    })
+    .then((resp) => resp.json())
+    .then(processedphoto =>{
+      setData(processedphoto)
+    })
+    .catch((error) => console.log(error));
+  }
+
+  function Receiveresults(props){
+    fetch("http://192.168.1.21:3000/results", {
+      method: "GET"
+    })
+    .then((resp) => resp.json())
+    .then(results =>{
+      setData(results)
+    })
+    .catch((error) => console.log(error));
+  }
+
   function Card(props) {
     return (
       <View style={styles.textBox}>
@@ -12,7 +34,7 @@ export default function Component2(props) {
 
   return (
     <ScrollView style={styles.mainContainer}>
-      <Image source={{ uri: props.image }} style={styles.logo} />
+      <Image source={{ processedphoto }} style={styles.logo} />
       <Card text={"Area of Wall"} />
       <Card text={"No of plants"} />
       <Card text={"Change in Temperature"} />
