@@ -4,8 +4,10 @@ from overlay import overlay
 import cv2
 import math
 
-def returns(loc1 = (1.3539504607263098, 103.68779725423865),loc2 =(1.3539461235261003, 103.68765894647215),
+def returns(loc1 = (1.3539504607263098, 103.68779725423865),loc2 =(1.353934978563778, 103.68775499966486),
             imgPath = "test1.png", bitmapPath = "bitmap.jpg"):
+
+    print(111111*math.dist(loc1,loc2))
 
     overlay(imgPath, "imgOverlay.jpg", bitmapPath)
 

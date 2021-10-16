@@ -50,9 +50,8 @@ def areas(img,depth):
     return(area, maxwActl, actlSize)
 
 if __name__== "__main__":
-    bitmapImg = cv2.imread("05june05_static_street_boston__p1010799_bitmap.jpg")
-    area, maxwActl, heightActl = areas(bitmapImg, 111111*math.dist((1.3539504607263098,103.68779725423865)
-                                                                 , (1.3539566667549052, 103.68758550537318))) # 111,111 is an approximation for lat and lng near the equator
+    bitmapImg = cv2.imread("test1.png")
+    area, maxwActl, heightActl = areas(bitmapImg, 111111*math.dist((1.3539504607263098, 103.68779725423865),(1.353934978563778, 103.68775499966486))) # 111,111 is an approximation for lat and lng near the equator
 
     print("Area = ", area)
     print("width", maxwActl)
