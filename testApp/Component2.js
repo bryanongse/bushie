@@ -1,11 +1,24 @@
-import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import React, {useState, useEffect} from "react";
+import { Image, StyleSheet, Text, View, ScrollView } from "react-native";
 
 export default function Component2(props) {
+  function Card(props) {
+    return (
+      <View style={styles.textBox}>
+        <Text style={styles.cardContent}>{props.text}</Text>
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.mainContainer}>
+    <ScrollView style={styles.mainContainer}>
       <Image source={{ uri: props.image }} style={styles.logo} />
-    </View>
+      <Card text={"Area of Wall"} />
+      <Card text={"No of plants"} />
+      <Card text={"Change in Temperature"} />
+      <Card text={"Energy Savings"} />
+      <Card text={"Cost savings"} />
+    </ScrollView>
   );
 }
 
@@ -16,9 +29,29 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   logo: {
-    height: "100%",
-    width: "100%",
-    flex: 1,
-    justifyContent: "center",
+    marginTop: 50,
+    height: 300,
+    width: 370,
+    alignSelf: "center",
+    borderRadius: 25,
+  },
+  textBox: {
+    backgroundColor: "#e6ffe6",
+    borderRadius: 6,
+    elevation: 3,
+    shadowOffset: { width: 1, height: 1 },
+    shadowColor: "#333",
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    marginHorizontal: 10,
+    marginVertical: 15,
+  },
+  cardContent: {
+    marginHorizontal: 10,
+    marginVertical: 10,
+    fontFamily: "System",
+    fontWeight: "600",
+    fontSize: 18,
+    color: "#65a765",
   },
 });

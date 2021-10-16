@@ -3,6 +3,7 @@ import Component1 from "./Component1";
 import Component2 from "./Component2";
 import React, { useState, useEffect, useRef } from "react";
 import { Feather as Icon } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 import {
   StyleSheet,
   Text,
@@ -14,7 +15,8 @@ import {
 import { Camera } from "expo-camera";
 
 export default function App() {
-  const [hasPermission, setHasPermission] = useState(null);
+  const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
+  const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
@@ -52,17 +54,36 @@ export default function App() {
     }
   };
 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
-      setHasPermission(status === "granted");
+      const cameraStatus = await Camera.requestPermissionsAsync();
+      setHasCameraPermission(cameraStatus.status === "granted");
+
+      const galleryStatus =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      setHasGalleryPermission(galleryStatus.status === "granted");
     })();
   }, []);
 
-  if (hasPermission === null) {
+  if (hasCameraPermission === null || hasGalleryPermission === false) {
     return <View />;
   }
-  if (hasPermission === false) {
+  if (hasCameraPermission === false || hasGalleryPermission === false) {
     return <Text>No access to camera</Text>;
   }
   return (
@@ -105,11 +126,12 @@ export default function App() {
       ) : (
         <Component2 image={image} />
       )}
-      <Button title="Send Photo" onPress={() => Sendphoto()}/>
+      <Button title="Send" onPress={() => Sendphoto()} />
       <Button
         title={showCamera ? "Submit" : "Back"}
         onPress={() => setShowCamera((prev) => !prev)}
       />
+      <Button title="Pick Image" onPress={() => pickImage()}/>
     </View>
   );
 }
@@ -119,7 +141,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   camera: {
-    width: 350,
+    width: 370,
     height: 550,
     alignSelf: "center",
     marginTop: 24,
