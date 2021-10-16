@@ -88,7 +88,6 @@ export default function App() {
   } else if (location) {
     text = JSON.stringify(location); // get coordinates in the form of {"coords",{"altitude", "altitudeAccuracy", "latitude","accuracy","logitude","heading","speed"}, "timestamp"}
   }
-  console.log(text);
 
   if (
     hasCameraPermission === null ||
