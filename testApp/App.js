@@ -3,6 +3,9 @@ import Component2 from "./Component2";
 import React, { useState, useEffect, useRef } from "react";
 import { Feather as Icon } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { Camera } from "expo-camera";
+import * as Location from "expo-location";
+
 import {
   StyleSheet,
   Text,
@@ -12,8 +15,8 @@ import {
   Button,
   ScrollView,
   Image,
+  TextInput,
 } from "react-native";
-import { Camera } from "expo-camera";
 
 export default function App() {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
@@ -23,18 +26,11 @@ export default function App() {
   const [image, setImage] = useState(null);
   const [showCamera, setShowCamera] = useState(true);
   const [showModal, setShowModal] = useState(true);
-
-  // const cam = useRef().current;
-
-  // const _takepicture = async () => {
-  //   const option = { quality: 0.5, base64: true, skipProcessing: false };
-
-  //   const picture = cam.takePictureAsync(option);
-
-  //   if (picture.source) {
-  //     console.log(picture.source);
-  //   }
-  // };
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [hasLocationPermission, setHasLocationPermission] = useState(null);
+  const [xCoord, setXCoord] = useState("");
+  const [yCoord, setYCoord] = useState("");
 
   function Sendphoto() {
     fetch("http://192.168.1.21:3000/photo", {
@@ -65,8 +61,6 @@ export default function App() {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       setImage(result.uri);
     }
@@ -80,14 +74,35 @@ export default function App() {
       const galleryStatus =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       setHasGalleryPermission(galleryStatus.status === "granted");
+      const locationStatus = await Location.requestForegroundPermissionsAsync();
+      setHasLocationPermission(locationStatus.status === "granted");
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
     })();
   }, []);
 
-  if (hasCameraPermission === null || hasGalleryPermission === false) {
+  let text = "Waiting..";
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location); // get coordinates in the form of {"coords",{"altitude", "altitudeAccuracy", "latitude","accuracy","logitude","heading","speed"}, "timestamp"}
+  }
+  console.log(text);
+
+  if (
+    hasCameraPermission === null ||
+    hasGalleryPermission === false ||
+    hasLocationPermission === false
+  ) {
     return <View />;
   }
-  if (hasCameraPermission === false || hasGalleryPermission === false) {
-    return <Text>No access to camera</Text>;
+  if (
+    hasCameraPermission === false ||
+    hasGalleryPermission === false ||
+    hasLocationPermission === false
+  ) {
+    return <Text>No access</Text>;
   }
   return (
     <View style={styles.container}>
@@ -129,12 +144,40 @@ export default function App() {
               </View>
             </Camera>
           ) : (
-            <TouchableOpacity
-              style={styles.backBtn}
-              onPress={() => setShowModal(true)}
-            >
-              <Icon name="chevrons-left" size={50} color="white" />
-            </TouchableOpacity>
+            <View>
+              <TouchableOpacity
+                style={styles.backBtn}
+                onPress={() => setShowModal(true)}
+              >
+                <Icon name="chevrons-left" size={50} color="white" />
+              </TouchableOpacity>
+              <TextInput
+                style={{
+                  height: 40,
+                  width: 200,
+                  margin: 12,
+                  borderWidth: 1,
+                  padding: 10,
+                  backgroundColor: "white",
+                }}
+                placeholder="Input X coordinate"
+                onChangeText={(xCoord) => setXCoord(xCoord)}
+                defaultValue={xCoord}
+              />
+              <TextInput
+                style={{
+                  height: 40,
+                  width: 200,
+                  margin: 12,
+                  borderWidth: 1,
+                  padding: 10,
+                  backgroundColor: "white",
+                }}
+                placeholder="Input Y coordinate"
+                onChangeText={(yCoord) => setYCoord(yCoord)}
+                defaultValue={yCoord}
+              />
+            </View>
           )}
           {/* empty view to see photo */}
         </ImageBackground>
@@ -188,6 +231,12 @@ const styles = StyleSheet.create({
     width: "100%",
     flex: 1,
     justifyContent: "center",
+  },
+  backBtn: {
+    flex: 0.2,
+    alignSelf: "flex-end",
+    marginTop: -5,
+    position: "absolute",
   },
   backBtn: {
     flex: 0.2,
