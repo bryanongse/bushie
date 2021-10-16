@@ -3,7 +3,9 @@ import numpy as np
 import math
 import os
 
-def overlay(preprocess = "test1.png", overlay = "imgOverlay2.jpg", bitmap = "ntubitmap.jpg"):
+def overlay(preprocess = "test1.png", overlay = "imgOverlay.jpg", bitmap = "bitmap.jpg"):
+
+
     img = cv2.imread(preprocess)
     overlay = cv2.imread(overlay)
     bitmap = cv2.imread(bitmap)
@@ -26,10 +28,12 @@ def overlay(preprocess = "test1.png", overlay = "imgOverlay2.jpg", bitmap = "ntu
             else:
                 continue
 
-    #img = cv2.resize(img, (img.shape[1]//6, img.shape[0]//6))
-    # cv2.imshow('test', img)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    #img = cv2.resize(img, (img.shape[1]//4, img.shape[0]//4))
+    cv2.imshow('test', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
-    cv2.imwrite(os.path.join(os.getcwd(), "final.png"), img)
+    #cv2.imwrite(os.path.join(os.getcwd(), "final.png"), img)
 
+if __name__== "__main__":
+    overlay()
