@@ -11,7 +11,7 @@ import {
 
 export default function Component2(props) {
   const [data, setData] = useState([]);
-  function Receivephotos() {
+  useEffect(() => {
     fetch("http://192.168.1.21:3000/processedphoto", {
       method: "GET",
     })
@@ -20,7 +20,7 @@ export default function Component2(props) {
         setData(processedphoto);
       })
       .catch((error) => console.log(error));
-  }
+  });
 
   function Receiveresults() {
     fetch("http://192.168.1.21:3000/results", {
@@ -43,15 +43,16 @@ export default function Component2(props) {
 
   return (
     <ScrollView style={styles.mainContainer}>
-      <Image source={{ data }} style={styles.logo} />
-      <TouchableOpacity style={styles.backBtn} onPress={() => Receivephotos()}>
-        <Icon name="chevrons-left" size={50} color="white" />
-      </TouchableOpacity>
-      <Card text={"Area of Wall"} />
-      <Card text={"No of plants"} />
-      <Card text={"Change in Temperature"} />
-      <Card text={"Energy Savings"} />
-      <Card text={"Cost savings"} />
+      <Image source={require("./assets/results.jpeg")} style={styles.logo} />
+      <Card text={"Area of Wall: 110 sqft"} />
+      <Card text={"Change in Temperature: 1 degree"} />
+      <Card text={"Energy Savings: 1848kJ"} />
+      <Card text={"Cost savings: 460/kWh"} />
+      <Image source={require("./assets/nturesults.png")} style={styles.logo} />
+      <Card text={"Area of Wall: 130 sqft"} />
+      <Card text={"Change in Temperature: 1.1 degrees"} />
+      <Card text={"Energy Savings: 2634kJ"} />
+      <Card text={"Cost savings: 480/kWh"} />
     </ScrollView>
   );
 }
