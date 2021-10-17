@@ -1,5 +1,6 @@
 # MLDA_d4ddy
 
+
 ## Setup
 ### Setup repo
 ```
@@ -23,4 +24,19 @@ python -m pip install -U -r requirements.txt
 ```
 
 ## Usage
-TBC
+React-native app hosting
+```
+cd testApp
+npm install
+npm start
+```
+
+Flask server hosting
+```
+cd backend
+python app.py
+```
+
+## Other parts of the solution
+Segmentation training/serving submodule: https://github.com/rehohoho/mmsegmentation \
+Depth-estimation serving submodule: https://github.com/rehohoho/AdaBins
