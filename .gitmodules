@@ -1,3 +1,6 @@
 [submodule "backend/mmsegmentation"]
 	path = backend/mmsegmentation
 	url = https://github.com/rehohoho/mmsegmentation
+[submodule "backend/depth_estimation"]
+	path = backend/depth_estimation
+	url = https://github.com/rehohoho/AdaBins.git
