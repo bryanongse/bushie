@@ -4,8 +4,14 @@ import datetime
 import base64
 
 from flask.helpers import send_file
+from mmsegmentation.tools.serve_local import LocalModelServer
 
-host = '192.168.1.166'
+HOST = '192.168.1.166'
+CONFIG_FILE = 'mmsegmentation/configs/ocrnet/ocrnet_hr18_512x1024_40k_labelmefacade.py'
+CHECKPOINT_FILE = 'mmsegmentation/work_dirs/ocrnet_hr18_512x1024_40k_labelmefacade/latest.pth'
+IMG_FILE = 'test1.jpg'
+PROCESSED_IMG_FILE = 'test1_processed.jpg'
+
 app = Flask(__name__)
 
 
@@ -24,14 +30,18 @@ def get_photo():
 @app.route('/processedphoto', methods=['GET'])
 def processed_photo():
     if request.method == "GET":
-        # --------------assuming inputs ML model---------
-        # from <ml file> import * (?)
-        # ML model accesses the og photo test1.jpg
-        # ML model returns a processed photo, stores under the variable <filename>
-        # ----------------------------------------------
-        filename = 'flower.jpg'
-    # return jsonify(results)
-    return send_file(filename, mimetype='image/jpg')
+        
+        result = modelServer.infer(IMG_FILE)
+        modelServer.save_visualise(IMG_FILE, result, PROCESSED_IMG_FILE)
+        imgdata = modelServer.get_visualise(IMG_FILE, result)
+        response = {
+          # 'img': str(base64.b64encode(imgdata))
+          "test": 1
+        }
+
+    return jsonify(response)
+    # return jsonify(str(b64imgdata))
+    # return send_file(PROCESSED_IMG_FILE, mimetype='image/jpg', as_attachment=True)
 
 
 @app.route('/results', methods=['GET'])
@@ -46,4 +56,5 @@ def get_results():
 
 
 if __name__ == "__main__":
-    app.run(host=host, port=8080, debug=True)
+    modelServer = LocalModelServer(config_file=CONFIG_FILE, checkpoint_file=CHECKPOINT_FILE)
+    app.run(host=HOST, port=8080, debug=True)
