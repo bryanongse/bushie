@@ -4,6 +4,7 @@ import math
 
 #input == bitmap, depth in meters
 def areas(img,depth):
+
     def hw(img):
         maxw = 0
         for x in range((img.shape[0])):
@@ -39,19 +40,19 @@ def areas(img,depth):
     actlSize = ( (0.28 * maxh) / depth) # focal length, cm
     multiplier = actlSize/maxh
 
-    # print("maxw", maxw)
-    # print("maxh", maxh)
-    # print(multiplier, "multiplier")
-
     area = areaPixel*(multiplier**2)
     maxwActl = maxw*multiplier
+    print(depth)
+    print("maxw", maxw)
+    print("maxh", actlSize)
+    print(multiplier, "multiplier")
 
     return(area, maxwActl, actlSize)
 
-bitmapImg = cv2.imread("ntubitmap.jpg")
-area, maxwActl, heightActl = areas(bitmapImg, 111111*math.dist((1.3539504607263098,103.68779725423865)
-                                                             , (1.3539566667549052, 103.68758550537318))) # 111,111 is an approximation for lat and lng near the equator
+if __name__== "__main__":
+    bitmapImg = cv2.imread("test1.png")
+    area, maxwActl, heightActl = areas(bitmapImg, 111111*math.dist((1.3539504607263098, 103.68779725423865),(1.353934978563778, 103.68775499966486))) # 111,111 is an approximation for lat and lng near the equator
 
-print("Area = ", area)
-print("width", maxwActl)
-print("height", heightActl)
+    print("Area = ", area)
+    print("width", maxwActl)
+    print("height", heightActl)
